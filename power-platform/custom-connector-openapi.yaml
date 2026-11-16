@@ -1,0 +1,66 @@
+openapi: 3.0.1
+info:
+  title: RetailOps Automation Hub API
+  version: 2.0.0
+  description: Starter contract. Configure deployed server URL and authentication before import.
+servers:
+  - url: http://localhost:8000
+paths:
+  /api/health:
+    get:
+      operationId: HealthCheck
+      responses:
+        '200': {description: Service health}
+  /api/dashboard:
+    get:
+      operationId: GetDashboard
+      responses:
+        '200': {description: Dashboard metrics}
+  /api/replenishments:
+    get:
+      operationId: ListReplenishments
+      responses:
+        '200': {description: Replenishment requests}
+  /api/automation/replenishment:
+    post:
+      operationId: RunReplenishment
+      responses:
+        '200': {description: Workflow execution result}
+  /api/replenishments/{id}/decision:
+    post:
+      operationId: DecideReplenishment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: integer}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision, manager]
+              properties:
+                decision: {type: string, enum: [approve, reject]}
+                manager: {type: string}
+                reason: {type: string}
+      responses:
+        '200': {description: Decision recorded}
+        '400': {description: Invalid or duplicate decision}
+        '404': {description: Request not found}
+  /api/pos/reconcile:
+    post:
+      operationId: ReconcilePOSException
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                store: {type: string}
+                severity: {type: string, enum: [Low, Medium, High, Critical]}
+                description: {type: string}
+      responses:
+        '201': {description: POS exception created}

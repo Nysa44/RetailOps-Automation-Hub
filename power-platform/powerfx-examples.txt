@@ -1,0 +1,18 @@
+// Example Canvas App submit button (rename controls/tables to match your environment)
+Set(varCase,
+    Patch('Operations Cases', Defaults('Operations Cases'),
+        {Store: cmbStore.Selected,
+         Category: ddCategory.Selected.Value,
+         Severity: ddSeverity.Selected.Value,
+         Description: txtDescription.Text,
+         Status: "Open"}));
+Notify("Case submitted", NotificationType.Success);
+
+// Pending replenishment queue
+Filter('Replenishment Requests', Status = "Pending Approval")
+
+// Low-stock warning in a gallery
+If(ThisItem.'On Hand' < ThisItem.'Reorder Level', Color.Red, Color.Green)
+
+// Manager decision should be implemented through the approval flow and
+// only update rows still in Pending Approval.
